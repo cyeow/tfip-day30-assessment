@@ -38,7 +38,7 @@ public class BeerController {
 	// TODO Task 3 - view 1
 	@GetMapping(path = "/beer/style/{styleId}")
 	public String browseByStyle(@PathVariable Integer styleId, @RequestParam String styleName, Model model) {
-		model.addAttribute("breweries", repo.getBreweriesByBeer(styleId));
+		model.addAttribute("breweries", repo.getBreweriesByBeer(styleId, styleName));
 		model.addAttribute("styleName", styleName);
 		return "view1";
 	}

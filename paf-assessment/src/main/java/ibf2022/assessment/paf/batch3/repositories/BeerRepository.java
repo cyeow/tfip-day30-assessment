@@ -13,6 +13,7 @@ import ibf2022.assessment.paf.batch3.models.Beer;
 import ibf2022.assessment.paf.batch3.models.Brewery;
 import ibf2022.assessment.paf.batch3.models.Style;
 import static ibf2022.assessment.paf.batch3.repositories.DBQueries.*;
+
 @Repository
 public class BeerRepository {
 
@@ -26,7 +27,7 @@ public class BeerRepository {
 
 		List<Style> styles = new LinkedList<>();
 
-		while(rs.next()) {
+		while (rs.next()) {
 			Style s = new Style();
 			s.setStyleId(rs.getInt("style_id"));
 			s.setName(rs.getString("name"));
@@ -36,15 +37,16 @@ public class BeerRepository {
 
 		return styles;
 	}
-		
+
 	// DO NOT CHANGE THE METHOD'S NAME OR THE RETURN TYPE OF THIS METHOD
-	public List<Beer> getBreweriesByBeer(Integer styleId) {
+	public List<Beer> getBreweriesByBeer(Integer styleId, String styleName) {
 		// TODO: Task 3
-		SqlRowSet rs = jdbc.queryForRowSet(SELECT_BREWERIES_BY_BEER_STYLE, styleId);
+		// both styleId and styleName have to match
+		SqlRowSet rs = jdbc.queryForRowSet(SELECT_BREWERIES_BY_BEER_STYLE, styleId, styleName);
 
 		List<Beer> breweries = new LinkedList<>();
 
-		while(rs.next()) {
+		while (rs.next()) {
 			breweries.add(createBeer(rs));
 		}
 
@@ -55,19 +57,19 @@ public class BeerRepository {
 	public Optional<Brewery> getBeersFromBrewery(Integer breweryId) {
 		// TODO: Task 4
 		SqlRowSet rs = jdbc.queryForRowSet(SELECT_BEERS_BY_BREWERY, breweryId);
-		
+
 		Brewery b = new Brewery();
 		b.setBreweryId(breweryId);
 
-		if(rs.next()) {
-				// set brewery details 
-				b.setName(rs.getString("brewery_name"));
-				b.setAddress1(rs.getString("address1"));
-				b.setAddress2(rs.getString("address2"));
-				b.setCity(rs.getString("city"));
-				b.setPhone(rs.getString("phone"));
-				b.setWebsite(rs.getString("website"));
-				b.setDescription(rs.getString("description"));
+		if (rs.next()) {
+			// set brewery details
+			b.setName(rs.getString("brewery_name"));
+			b.setAddress1(rs.getString("address1"));
+			b.setAddress2(rs.getString("address2"));
+			b.setCity(rs.getString("city"));
+			b.setPhone(rs.getString("phone"));
+			b.setWebsite(rs.getString("website"));
+			b.setDescription(rs.getString("description"));
 		} else {
 			return Optional.empty();
 		}
@@ -76,7 +78,7 @@ public class BeerRepository {
 
 		do {
 			beers.add(createBeer(rs));
-		} while(rs.next());
+		} while (rs.next());
 
 		b.setBeers(beers);
 
@@ -84,7 +86,7 @@ public class BeerRepository {
 	}
 
 	private Beer createBeer(SqlRowSet rs) {
-		Beer b  = new Beer();
+		Beer b = new Beer();
 		b.setBeerId(rs.getInt("beer_id"));
 		b.setBeerName(rs.getString("beer_name"));
 		b.setBeerDescription(rs.getString("beer_description"));

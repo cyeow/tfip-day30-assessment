@@ -8,8 +8,10 @@ CREATE DATABASE brewery;
 
 USE brewery;
 
-SOURCE C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/beers.sql;
-SOURCE C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/breweries.sql;
 SOURCE C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/categories.sql;
+SOURCE C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/breweries.sql;
 SOURCE C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/geocodes.sql;
 SOURCE C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/styles.sql;
+SOURCE C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/beers.sql;
+
+SET GLOBAL local_infile=false;

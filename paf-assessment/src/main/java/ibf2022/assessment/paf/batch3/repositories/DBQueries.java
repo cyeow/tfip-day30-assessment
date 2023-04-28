@@ -7,8 +7,8 @@ public class DBQueries {
             styles.id as style_id,
             styles.style_name as name,
             count(beers.id) as beer_count
-            FROM brewery.styles
-            join brewery.beers on styles.id = beers.style_id
+            FROM styles
+            join beers on styles.id = beers.style_id
             group by style_id
             order by beer_count DESC;
                 """;

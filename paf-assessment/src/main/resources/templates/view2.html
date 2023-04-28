@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title data-th-if="${brewery == null}">Brewery not found</title>
+    <title data-th-unless="${brewery == null}" data-th-text="${brewery.name}">Brewery Details</title>
 </head>
 
 <body>
@@ -43,6 +44,9 @@
         <h2>Beers</h2>
         <form method="post" data-th-action="@{'/brewery/' + *{breweryId} + '/order'}">
             <button type="submit">Place Order</button>
+            <p data-th-unless="${globalError.isBlank()}" style="color:red;">
+                <span data-th-text="${globalError}"></span>
+            </p>
             <table border="1">
                 <tr>
                     <th>Name</th>
@@ -52,7 +56,7 @@
                 <tr data-th-each="b : ${brewery.beers}" data-th-object="${b}">
                     <td data-th-text="*{beerName}"></td>
                     <td data-th-text="*{beerDescription}"></td>
-                    <td><input type="number" data-th-name="*{beerId}"/></td>
+                    <td><input type="number" data-th-name="*{beerId}" /></td>
                 </tr>
             </table>
         </form>

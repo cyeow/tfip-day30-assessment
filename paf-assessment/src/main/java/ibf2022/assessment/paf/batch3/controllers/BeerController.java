@@ -1,7 +1,6 @@
 package ibf2022.assessment.paf.batch3.controllers;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -46,13 +45,16 @@ public class BeerController {
 
 	// TODO Task 4 - view 2
 	@GetMapping(path = "/brewery/{breweryId}")
-	public String goToBrewery(@PathVariable Integer breweryId, Model model) {
+	public String goToBrewery(@PathVariable Integer breweryId, Model model, @RequestParam(defaultValue="") String globalError) {
 		Optional<Brewery> optB = repo.getBeersFromBrewery(breweryId);
 		if (optB.isPresent()) {
 			model.addAttribute("brewery", optB.get());
 		} else {
 			model.addAttribute("brewery", null);
 		}
+
+		model.addAttribute("globalError", globalError);
+
 		return "view2";
 	}
 
@@ -60,10 +62,7 @@ public class BeerController {
 	@PostMapping(path = "/brewery/{breweryId}/order", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public String placeOrder(@PathVariable Integer breweryId, @RequestParam HashMap<String, String> orderMap,
 			Model model) {
-		// parse order header
 		Order o = new Order();
-		o.setBreweryId(breweryId);
-		o.setDate(LocalDate.now());
 
 		// parse order details
 		// orderMap.keySet().forEach(key -> System.out.println(key.getClass()));
@@ -73,6 +72,15 @@ public class BeerController {
 						new LineItem(Integer.parseInt(beerId), Integer.parseInt(orderMap.get(beerId))));
 			}
 		});
+
+		// if there are no beers ordered the order is invalid
+		if (o.getOrders().size() == 0) {
+			return "redirect:/brewery/" + breweryId + "?globalError=No beers have been ordered.";
+		}
+
+		// parse order header
+		o.setBreweryId(breweryId);
+		o.setDate(LocalDate.now());
 
 		// place order and assign orderId
 		o.setOrderId(svc.placeOrder(o));

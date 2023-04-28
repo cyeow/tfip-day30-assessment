@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div data-th-if="${brewery == null}">
+        <h1>Brewery not found</h1>
+        <p><a href="/">Back</a></p>
+    </div>
+
+    <div data-th-unless="${brewery == null}" data-th-object="${brewery}">
+        <h1 data-th-text="*{name}"></h1>
+        <p><a href="/">Back</a></p>
+        <table>
+            <tr>
+                <td>Description:</td>
+                <td data-th-text="*{description}"></td>
+            </tr>
+            <tr>
+                <td rowspan="2">Address:</td>
+                <td data-th-text="@{*{address1} + ' ' + *{address2}}"></td>
+            </tr>
+            <tr>
+                <td data-th-text="*{city}"></td>
+            </tr>
+            <tr>
+                <td>Phone:</td>
+                <td data-th-text="*{phone}"></td>
+            </tr>
+            <tr>
+                <td>Website:</td>
+                <td><a data-th-href="@{*{website}}" data-th-text="*{website}">Go</a></td>
+            </tr>
+        </table>
+
+        <br>
+        <h2>Beers</h2>
+        <form method="post" data-th-action="@{'/brewery/' + *{breweryId} + '/order'}">
+            <button type="submit">Place Order</button>
+            <table border="1">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                </tr>
+                <tr data-th-each="b : ${brewery.beers}" data-th-object="${b}">
+                    <td data-th-text="*{beerName}"></td>
+                    <td data-th-text="*{beerDescription}"></td>
+                    <td><input type="number" data-th-name="*{beerId}"/></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+
+</html>

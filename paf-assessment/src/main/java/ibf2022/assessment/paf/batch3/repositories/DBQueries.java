@@ -30,7 +30,7 @@ public class DBQueries {
     public static final String SELECT_BEERS_BY_BREWERY = """
             SELECT
             breweries.id as brewery_id,
-            breweries.name as name,
+            breweries.name as brewery_name,
             breweries.address1 as address1,
             breweries.address2 as address2,
             breweries.city as city,

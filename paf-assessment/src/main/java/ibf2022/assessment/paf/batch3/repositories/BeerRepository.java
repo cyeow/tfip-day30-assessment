@@ -45,22 +45,51 @@ public class BeerRepository {
 		List<Beer> breweries = new LinkedList<>();
 
 		while(rs.next()) {
-			Beer b  = new Beer();
-			b.setBeerId(rs.getInt("beer_id"));
-			b.setBeerName(rs.getString("beer_name"));
-			b.setBeerDescription(rs.getString("beer_description"));
-			b.setBreweryId(rs.getInt("brewery_id"));
-			b.setBreweryName(rs.getString("brewery_name"));
-			breweries.add(b);
+			breweries.add(createBeer(rs));
 		}
-		
+
 		return breweries;
 	}
 
 	// DO NOT CHANGE THE METHOD'S NAME OR THE RETURN TYPE OF THIS METHOD
-	public Optional<Brewery> getBeersFromBrewery(/* You can add any number of parameters here */) {
+	public Optional<Brewery> getBeersFromBrewery(Integer breweryId) {
 		// TODO: Task 4
+		SqlRowSet rs = jdbc.queryForRowSet(SELECT_BEERS_BY_BREWERY, breweryId);
+		
+		Brewery b = new Brewery();
+		b.setBreweryId(breweryId);
 
-		return Optional.empty();
+		if(rs.next()) {
+				// set brewery details 
+				b.setName(rs.getString("brewery_name"));
+				b.setAddress1(rs.getString("address1"));
+				b.setAddress2(rs.getString("address2"));
+				b.setCity(rs.getString("city"));
+				b.setPhone(rs.getString("phone"));
+				b.setWebsite(rs.getString("website"));
+				b.setDescription(rs.getString("description"));
+		} else {
+			return Optional.empty();
+		}
+
+		List<Beer> beers = new LinkedList<>();
+
+		do {
+			beers.add(createBeer(rs));
+		} while(rs.next());
+
+		b.setBeers(beers);
+
+		return Optional.of(b);
+	}
+
+	private Beer createBeer(SqlRowSet rs) {
+		Beer b  = new Beer();
+		b.setBeerId(rs.getInt("beer_id"));
+		b.setBeerName(rs.getString("beer_name"));
+		b.setBeerDescription(rs.getString("beer_description"));
+		b.setBreweryId(rs.getInt("brewery_id"));
+		b.setBreweryName(rs.getString("brewery_name"));
+		return b;
 	}
 }

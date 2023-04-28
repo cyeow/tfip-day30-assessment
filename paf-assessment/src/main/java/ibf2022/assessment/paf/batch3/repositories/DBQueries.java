@@ -10,7 +10,7 @@ public class DBQueries {
                         FROM styles
                         join beers on styles.id = beers.style_id
                         group by style_id
-                        order by beer_count DESC;
+                        order by beer_count DESC, name ASC;
                             """;
 
         public static final String SELECT_BREWERIES_BY_BEER_STYLE = """
